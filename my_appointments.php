@@ -9,7 +9,7 @@
 <body class="bg-gray-100 min-h-screen">
 
     <!-- Navbar -->
-    <nav class="bg-white shadow-md py-4">
+    <nav class="bg-blue-800 shadow-md py-4">
         <div class="container mx-auto flex justify-between items-center px-4">
             <a href="#" class="flex items-center space-x-3 text-lg font-semibold text-gray-800">
                 <img src="sanpablocityseal.png" alt="San Pablo City Seal" class="w-10 h-10">

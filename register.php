@@ -1,122 +1,126 @@
 <?php 
+session_start(); // Start session before any output
+include 'connect.php'; // Ensure database connection is available
 
-include 'connect.php';
-
+// ✅ User Registration
 if(isset($_POST['sign_up'])){
-    $first_name=($_POST['first_name']);
-    $last_name=($_POST['last_name']);
-    $email_address=($_POST['email_address']);
-    $password=($_POST['password']);
-    $password=md5($password);
+    $first_name = trim($_POST['first_name']);
+    $last_name = trim($_POST['last_name']);
+    $contact_number = trim($_POST['contact_number']);
+    $email_address = trim($_POST['email_address']);
+    $password = trim($_POST['password']);
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT); // Secure password hashing
 
-        $check_email="SELECT * From users where email_address='$email_address'";
-        $result=$conn->query($check_email);
-        if($result->num_rows > 0){
-            echo "Email Address Already Exists! ";
-        }
-        else{
-            $insertQuery="INSERT INTO users(first_name,last_name,email_address,password)
-            VALUES ('$first_name','$last_name','$email_address','$password')";
-            if($conn->query($insertQuery)==TRUE){
-                header("location: index.php");
-            }
-            else{
-                echo "Error:".$conn->error;
-            }
-        }
-}
+    // Check if email already exists
+    $check_email = $conn->prepare("SELECT * FROM users WHERE email_address = ?");
+    $check_email->bind_param("s", $email_address);
+    $check_email->execute();
+    $result = $check_email->get_result();
 
-if(isset($_POST["sign_in"])){
-    $email_address=$_POST['email_address'];
-    $password=$_POST['password'];
-    $password=md5($password);
-
-    $sql="SELECT * FROM users WHERE email_address='$email_address' and password='$password'";
-    $result=$conn->query($sql);
     if($result->num_rows > 0){
-        session_start();
-        $row= $result->fetch_assoc();
-        $_SESSION['email_address']=$row['email_address'];
-        header("location: homepage.php");
-        exit();
-    }
-    else{
-        echo "Incorret Email or Password";
+        echo "Email Address Already Exists!";
+    } else {
+        // Insert new user
+        $insertQuery = $conn->prepare("INSERT INTO users (first_name, last_name, contact_number, email_address, password) VALUES (?, ?, ?, ?, ?)");
+        $insertQuery->bind_param("sssss", $first_name, $last_name, $contact_number, $email_address, $hashed_password);
+
+        if($insertQuery->execute()){
+            header("location: index.php");
+            exit();
+        } else {
+            echo "Error: " . $conn->error;
+        }
     }
 }
+
+// ✅ User Login
+if(isset($_POST["sign_in"])){
+    $email_address = trim($_POST['email_address']);
+    $password = trim($_POST['password']);
+
+    $sql = $conn->prepare("SELECT * FROM users WHERE email_address = ?");
+    $sql->bind_param("s", $email_address);
+    $sql->execute();
+    $result = $sql->get_result();
+
+    if($result->num_rows > 0){
+        $row = $result->fetch_assoc();
+        if(password_verify($password, $row['password'])){ // ✅ Correctly verifying password
+            $_SESSION['email_address'] = $row['email_address'];
+            $_SESSION['user_id'] = $row['user_id']; // Store user ID for reference
+            header("location: homepage.php");
+            exit();
+        } else {
+            echo "Incorrect Password!";
+        }
+    } else {
+        echo "Incorrect Email or Password!";
+    }
+}
+
+// ✅ Super Admin & Admin Login Handling
+if(isset($_POST['register_admin'])){
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT); // ✅ Hash admin password
+
+    $insertAdmin = $conn->prepare("INSERT INTO admins (username, password) VALUES (?, ?)");
+    $insertAdmin->bind_param("ss", $username, $hashed_password);
+
+    if($insertAdmin->execute()){
+        echo "Admin registered successfully!";
+    } else {
+        echo "Error: " . $conn->error;
+    }
+}
+
+
+?>
+
+<?php
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1); // ✅ Always start session at the top
+
+include 'connect.php'; // ✅ Database connection
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+    $role = $_POST['role']; // ✅ Role: 'admin' or 'super_admin'
 
-    // Check if super admin
-    $super_admin = $conn->query("SELECT * FROM super_admins WHERE username='$username' AND password='$password'");
-    if ($super_admin->num_rows > 0) {
-        $_SESSION['role'] = 'super_admin';
-        header("Location: superadmin_dashboard.php");
-        exit();
-    }
-
-    // Check if admin
-    $admin = $conn->query("SELECT * FROM admins WHERE username='$username' AND password='$password'");
-    if ($admin->num_rows > 0) {
-        $_SESSION['role'] = 'admin';
-        $_SESSION['department_id'] = $admin->fetch_assoc()['department_id'];
-        header("Location: admin_dashboard.php");
-        exit();
-    }
-
-    echo "Invalid credentials!";
-}
-
-if(isset($_POST['admin'])) {
-    $username = $_POST['username'];
-    $password = md5($_POST['password']); // 🔴 Use password_hash() in production
-
-    // Fetch admin details including department_id
-    $sql = "SELECT id, username, department_id, email_address FROM admins WHERE username=? AND password=?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $username, $password);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $admin = $result->fetch_assoc();
-        
-        // ✅ Store admin details in SESSION
-        $_SESSION['admin_id'] = $admin['id'];
-        $_SESSION['department_id'] = $admin['department_id']; // 🔴 This was missing before!
-        $_SESSION['email_address'] = $admin['email_address']; // Keeping this for reference
-
-        // Debugging: Print session data after setting
-        echo "<pre>✅ SESSION DATA AFTER LOGIN:\n";
-        print_r($_SESSION);
-        echo "</pre>";
-
-        header("location: admin_dashboard.php");
-        exit();
+    // Prevent SQL Injection
+    if ($role === "admin") {
+        $sql = "SELECT id, username, password, department_id FROM admins WHERE username = ?";
+    } elseif ($role === "super_admin") {
+        $sql = "SELECT id, username, password FROM super_admins WHERE username = ?";
     } else {
-        echo "❌ ERROR: Incorrect Username or Password";
-    }
-}
-
-
-if(isset($_POST["super_admin"])){
-    $username=$_POST['username'];
-    $password=$_POST['password'];
-    $password=md5($password);
-
-    $sql="SELECT * FROM super_admins WHERE username='$username' and password='$password'";
-    $result=$conn->query($sql);
-    if($result->num_rows > 0){
-        session_start();
-        $row= $result->fetch_assoc();
-        $_SESSION['username']=$row['username'];
-        header("location: superadmin_dashboard.php");
+        echo "❌ Invalid role selected!";
         exit();
     }
-    else{
-        echo "Incorret Username or Password";
+
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+
+            // ✅ Secure password check using password_verify()
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['role'] = $role;
+                $_SESSION['user_id'] = $user['id'];
+
+                if ($role === "admin") {
+                    $_SESSION['department_id'] = $user['department_id']; // ✅ Admins have department_id
+                    header("Location: admin_dashboard.php");
+                } else {
+                    header("Location: superadmin_dashboard.php");
+                }
+                exit();
+            }
+        }
     }
 }
-?>

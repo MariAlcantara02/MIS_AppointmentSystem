@@ -1,5 +1,7 @@
 <?php 
-
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1); // ✅ Always start session at the top
 include 'connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -64,3 +66,4 @@ if(isset($_POST["super_admin"])){
     }
 }
 ?>
+

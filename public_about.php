@@ -20,14 +20,10 @@
                 <i class="fas fa-bars text-xl"></i>
             </button>
             <div class="hidden md:flex space-x-6" id="menu">
-                <a href="homepage.php" class="text-gray-700 hover:text-blue-500">Home</a>
-                <a href="announcement.php" class="text-gray-700 hover:text-blue-500">Announcement</a>
-                <a href="about.php" class="text-gray-700 hover:text-blue-500">About</a>
-                <a href="gallery.php" class="text-gray-700 hover:text-blue-500">Gallery</a>
-                <a href="appointment_booking.php" class="text-gray-700 hover:text-blue-500">Book Appointment</a>
-                <a href="my_appointments.php" class="text-gray-700 hover:text-blue-500">My Appointments</a>
-                <a href="profile.php" class="text-gray-700 hover:text-blue-500">Profile</a>
-                <a href="logout.php" class="text-gray-700 hover:text-red-500">Logout</a>
+                <a href="public_announcement.php" class="text-gray-700 hover:text-blue-500">Announcement</a>
+                <a href="public_about.php" class="text-gray-700 hover:text-blue-500">About</a>
+                <a href="public_gallery.php" class="text-gray-700 hover:text-blue-500">Gallery</a>
+                <a href="index.php" class="text-gray-700 hover:text-red-500">Sign In</a>
             </div>
         </div>
     </nav>

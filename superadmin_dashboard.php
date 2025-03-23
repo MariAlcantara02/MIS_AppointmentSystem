@@ -1,36 +1,42 @@
-<?php 
+<?php
 session_start();
 include 'connect.php';
 
-if(isset($_POST['superadmin'])) {
-    $username = $_POST['username'];
-    $password = md5($_POST['password']); // 🔴 Use password_hash() in production
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Assuming user_id is stored in session after login
+    $user_id = $_SESSION['user_id'] ?? null; // Use null coalescing operator to handle undefined session key
 
-    // Fetch admin details including department_id
-    $sql = "SELECT id, username FROM superadmins WHERE username=? AND password=?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $username, $password);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $contact_number = $_POST['contact_number'];
+    $email_address = $_POST['email_address'];
+    $department_id = $_POST['department_id'];
+    $reason_id = $_POST['reason_id'];
+    $booking_date = $_POST['booking_date'];
 
-    if ($result->num_rows > 0) {
-        $admin = $result->fetch_assoc();
+    if ($user_id !== null) {
+        // Prepare the SQL statement
+        $stmt = $conn->prepare("INSERT INTO bookings (user_id, first_name, last_name, contact_number, email_address, department_id, reason_id, booking_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         
-        // ✅ Store admin details in SESSION
-        $_SESSION['superadmin_id'] = $admin['id'];
-        $_SESSION['username'] = $admin['username']; // Keeping this for reference
+        // Bind parameters
+        $stmt->bind_param("issssiss", $user_id, $first_name, $last_name, $contact_number, $email_address, $department_id, $reason_id, $booking_date);
 
-        // Debugging: Print session data after setting
-        echo "<pre>✅ SESSION DATA AFTER LOGIN:\n";
-        print_r($_SESSION);
-        echo "</pre>";
+        // Execute the statement
+        if ($stmt->execute()) {
+            echo "Booking submitted successfully!";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
 
-        header("location: superadmin_dashboard.php");
-        exit();
+        // Close the statement
+        $stmt->close();
     } else {
-        echo "❌ ERROR: Incorrect Username or Password";
+        echo "Error: User ID is not set.";
     }
 }
+
+// Close the connection
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -83,7 +89,7 @@ if(isset($_POST['superadmin'])) {
     <!-- Main Content -->
     <div class="flex-1">
         <!-- Navbar -->
-        <nav class="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+        <nav class="bg-blue-800 shadow-md py-4 px-6 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <img src="sanpablocityseal.png" alt="San Pablo City Seal" class="w-10 h-10">
                 <span class="text-lg font-semibold text-gray-800">San Pablo City Mega Capitol</span>
@@ -97,38 +103,65 @@ if(isset($_POST['superadmin'])) {
             </div>
         </nav>
 
-       <!-- Mobile Sidebar -->
-<div id="mobile-menu" class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-secondary text-white w-64 p-6 h-full relative">
-        <div class="text-center text-2xl font-bold mb-6">Menu</div>
-        <ul class="space-y-4">
-            <li class="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-md cursor-pointer">
-                <i class="fas fa-tachometer-alt"></i>
-                <a href="superadmin_dashboard.php" class="text-white hover:text-blue-400">Dashboard</a>
-            </li>
-            <li class="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-md cursor-pointer">
-                <i class="fas fa-calendar-check"></i>
-                <a href="appointments.php" class="text-white hover:text-blue-400">Appointments</a>
-            </li>
-            <li class="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-md cursor-pointer">
-                <i class="fas fa-users"></i>
-                <a href="view_users.php" class="text-white hover:text-blue-400">Users</a>
-            </li>
-            <li class="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-md cursor-pointer">
-                <i class="fas fa-user-shield"></i>
-                <a href="view_admins.php" class="text-white hover:text-blue-400">Admin</a>
-            </li>
-        </ul>
-        <button id="menu-close" class="absolute top-4 right-4 text-white text-2xl">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-</div>
+        <!-- Mobile Sidebar -->
+        <div id="mobile-menu" class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+            <div class="bg-secondary text-white w-64 p-6 h-full relative">
+                <div class="text-center text-2xl font-bold mb-6">Menu</div>
+                <ul class="space-y-4">
+                    <li class="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-md cursor-pointer">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <a href="superadmin_dashboard.php" class="text-white hover:text-blue-400">Dashboard</a>
+                    </li>
+                    <li class="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-md cursor-pointer">
+                        <i class="fas fa-calendar-check"></i>
+                        <a href="appointments.php" class="text-white hover:text-blue-400">Appointments</a>
+                    </li>
+                    <li class="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-md cursor-pointer">
+                        <i class="fas fa-users"></i>
+                        <a href="view_users.php" class="text-white hover:text-blue-400">Users</a>
+                    </li>
+                    <li class="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-md cursor-pointer">
+                        <i class="fas fa-user-shield"></i>
+                        <a href="view_admins.php" class="text-white hover:text-blue-400">Admin</a>
+                    </li>
+                </ul>
+                <button id="menu-close" class="absolute top-4 right-4 text-white text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
 
         <!-- Main Content Area -->
         <div class="p-6">
             <h1 class="text-2xl font-bold text-gray-800">Welcome to the Super Admin Dashboard</h1>
             <p class="text-gray-600 mt-2">Manage your appointments, users, and more.</p>
+
+            <!-- Bookings Section -->
+            <h2 class="text-xl font-bold text-gray-800 mt-6">Bookings</h2>
+            <?php if ($result->num_rows > 0): ?>
+                <table class="min-w-full bg-white mt-4">
+                    <thead>
+                        <tr>
+                            <th class="py-2 px-4 border-b">Booking ID</th>
+                            <th class="py-2 px-4 border-b">User ID</th>
+                            <th class="py-2 px-4 border-b">Date</th>
+                            <th class="py-2 px-4 border-b">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php while($booking = $result->fetch_assoc()): ?>
+    <tr>
+        <td class="py-2 px-4 border-b"><?php echo $booking['id']; ?></td>
+        <td class="py-2 px-4 border-b"><?php echo $booking['user_id']; ?></td>
+        <td class="py-2 px-4 border-b"><?php echo $booking['booking_date']; ?></td> <!-- Updated key -->
+        <td class="py-2 px-4 border-b"><?php echo $booking['status']; ?></td>
+    </tr>
+<?php endwhile; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p class="text-gray-600 mt-2">No bookings found.</p>
+            <?php endif; ?>
         </div>
     </div>
 

@@ -10,7 +10,7 @@
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
    <!-- Navbar -->
-   <nav class="bg-white shadow-md py-4">
+   <nav class="bg-blue-800 shadow-md py-4">
        <div class="container mx-auto flex justify-between items-center px-4">
            <a href="#" class="flex items-center space-x-3 text-lg font-semibold text-gray-800">
                <img src="sanpablocityseal.png" alt="San Pablo City Seal" class="w-10 h-10">
@@ -30,7 +30,8 @@
        <!-- Super Admin Login (Initially Hidden) -->
        <div id="super_admin" class="w-full max-w-md bg-white p-6 rounded-lg shadow-lg hidden">
            <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Super Admin</h1>
-           <form method="post" action="register.php" class="space-y-4">
+           <form method="post" action="login_process.php" class="space-y-4">
+               <input type="hidden" name="role" value="super_admin"> <!-- ✅ Identifies role -->
                <div class="relative">
                    <i class="fas fa-user absolute left-3 top-3 text-gray-500"></i>
                    <input type="text" name="username" placeholder="Username" required 
@@ -42,7 +43,7 @@
                        class="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                </div>
                <p class="text-right text-blue-500 text-sm"><a href="#">Recover Password</a></p>
-               <button type="submit" name="login" class="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold hover:bg-blue-600 transition">Log In</button>
+               <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold hover:bg-blue-600 transition">Log In</button>
            </form>
 
            <p class="text-center my-3 text-gray-500">or</p>
@@ -56,7 +57,8 @@
        <!-- Admin Login -->
        <div id="admin" class="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
            <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Admin</h1>
-           <form method="post" action="register.php" class="space-y-4">
+           <form method="post" action="login_process.php" class="space-y-4">
+               <input type="hidden" name="role" value="admin"> <!-- ✅ Identifies role -->
                <div class="relative">
                    <i class="fas fa-user absolute left-3 top-3 text-gray-500"></i>
                    <input type="text" name="username" placeholder="Username" required 
@@ -67,8 +69,8 @@
                    <input type="password" name="password" placeholder="Password" required 
                        class="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                </div>
-               <p class="text-right text-blue-500 text-sm"><a href="#">Recover Password</a></p>
-               <button type="submit" name="login" class="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold hover:bg-blue-600 transition">Log In</button>
+               <p class="text-right text-blue-500 text-sm"><a href="admin_forgot_password.php">Recover Password</a></p>
+               <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold hover:bg-blue-600 transition">Log In</button>
            </form>
 
            <p class="text-center my-3 text-gray-500">or</p>
