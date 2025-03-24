@@ -90,8 +90,8 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-white text-center py-4 shadow-md mt-5">
-        <p class="text-gray-600">&copy; 2023 San Pablo City Mega Capitol. All rights reserved.</p>
+    <footer class="bg-blue-800 text-center py-4 shadow-md mt-5">
+        <p class="text-white">&copy; 2025 San Pablo City Mega Capitol. All rights reserved.</p>
     </footer>
 
     <!-- JavaScript to Toggle Forms -->

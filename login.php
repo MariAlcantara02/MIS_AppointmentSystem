@@ -12,15 +12,15 @@
    <!-- Navbar -->
    <nav class="bg-blue-800 shadow-md py-4">
        <div class="container mx-auto flex justify-between items-center px-4">
-           <a href="#" class="flex items-center space-x-3 text-lg font-semibold text-gray-800">
+           <a href="#" class="flex items-center space-x-3 text-lg font-semibold text-white">
                <img src="sanpablocityseal.png" alt="San Pablo City Seal" class="w-10 h-10">
                <span>San Pablo City Mega Capitol</span>
            </a>
            <div class="space-x-4">
-               <a href="announcement.php" class="text-gray-700 hover:text-blue-500">Announcement</a>
-               <a href="about.php" class="text-gray-700 hover:text-blue-500">About</a>
-               <a href="gallery.php" class="text-gray-700 hover:text-blue-500">Gallery</a>
-               <a href="index.php" class="text-gray-700 hover:text-blue-500">User</a>
+               <a href="announcement.php" class="text-white hover:text-blue-500">Announcement</a>
+               <a href="about.php" class="text-white hover:text-blue-500">About</a>
+               <a href="gallery.php" class="text-white hover:text-blue-500">Gallery</a>
+               <a href="index.php" class="text-white hover:text-blue-500">User</a>
            </div>
        </div>
    </nav>
@@ -82,10 +82,10 @@
        </div>
    </div>
 
-   <!-- Footer -->
-   <footer class="bg-white text-center py-4 shadow-md mt-5">
-       <p class="text-gray-600">&copy; 2023 San Pablo City Mega Capitol. All rights reserved.</p>
-   </footer>
+    <!-- Footer -->
+    <footer class="bg-blue-800 text-center py-4 shadow-md mt-5">
+        <p class="text-white">&copy; 2025 San Pablo City Mega Capitol. All rights reserved.</p>
+    </footer>
 
    <!-- JavaScript for Form Switching -->
    <script>

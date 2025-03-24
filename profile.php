@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 $conn = new mysqli("localhost", "root", "", "appointment_booking");
 if ($conn->connect_error) {
@@ -19,26 +19,46 @@ $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 $stmt->close();
 
-// Handle profile update
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $email_address = $_POST['email_address'];
     $contact_number = $_POST['contact_number'];
     
-    // Handle profile picture upload
-    if (!empty($_FILES['profile_image']['name'])) {
+    // Check if an image file is uploaded
+    if (!empty($_FILES['profile_picture']['name'])) {
         $target_dir = "uploads/";
-        $target_file = $target_dir . basename($_FILES['profile_image']['name']);
-        move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file);
-        $query = "UPDATE users SET first_name=?, last_name=?, email_address=?, contact_number=?, profile_image=? WHERE user_id=?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("sssssi", $first_name, $last_name, $email_address, $contact_number, $target_file, $user_id);
+        
+        // Ensure the `uploads/` directory exists
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
+        $file_extension = pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION);
+        $new_file_name = "profile_" . $user_id . "." . $file_extension; // Unique file name
+        $target_file = $target_dir . $new_file_name;
+        
+        // Validate the file type (optional but recommended)
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+        if (!in_array(strtolower($file_extension), $allowed_extensions)) {
+            die("Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.");
+        }
+
+        if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target_file)) {
+            // Update user profile with image
+            $query = "UPDATE users SET first_name=?, last_name=?, email_address=?, contact_number=?, profile_picture=? WHERE user_id=?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("sssssi", $first_name, $last_name, $email_address, $contact_number, $target_file, $user_id);
+        } else {
+            die("Error uploading file.");
+        }
     } else {
+        // Update without profile picture
         $query = "UPDATE users SET first_name=?, last_name=?, email_address=?, contact_number=? WHERE user_id=?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ssssi", $first_name, $last_name, $email_address, $contact_number, $user_id);
     }
+
     $stmt->execute();
     $stmt->close();
     header("Location: profile.php"); // Refresh profile page
@@ -57,19 +77,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Navbar -->
     <nav class="bg-blue-800 shadow-md py-4">
         <div class="container mx-auto flex justify-between items-center px-4">
-            <a href="#" class="flex items-center space-x-3 text-lg font-semibold text-gray-800">
+            <a href="#" class="flex items-center space-x-3 text-lg font-semibold text-white">
                 <img src="sanpablocityseal.png" alt="San Pablo City Seal" class="w-10 h-10">
                 <span>San Pablo City Mega Capitol</span>
             </a>
             <div class="space-x-4">
-            <a href="homepage.php" class="text-gray-700 hover:text-blue-500">Home</a>
-                <a href="announcement.php" class="text-gray-700 hover:text-blue-500">Announcement</a>
-                <a href="about.php" class="text-gray-700 hover:text-blue-500">About</a>
-                <a href="gallery.php" class="text-gray-700 hover:text-blue-500">Gallery</a>
-                <a href="appointment_booking.php" class="text-gray-700 hover:text-blue-500">Book Appointment</a>
-                <a href="my_appointments.php" class="text-gray-700 hover:text-blue-500">My Appointments</a>
-                <a href="profile.php" class="text-gray-700 hover:text-blue-500">Profile</a>
-                <a href="logout.php" class="text-gray-700 hover:text-red-500">Logout</a>
+            <a href="homepage.php" class="text-white hover:text-blue-500">Home</a>
+                <a href="announcement.php" class="text-white hover:text-blue-500">Announcement</a>
+                <a href="about.php" class="text-white hover:text-blue-500">About</a>
+                <a href="gallery.php" class="text-white hover:text-blue-500">Gallery</a>
+                <a href="appointment_booking.php" class="text-white hover:text-blue-500">Book Appointment</a>
+                <a href="my_appointments.php" class="text-white hover:text-blue-500">My Appointments</a>
+                <a href="profile.php" class="text-white font-bold">Profile</a>
+                <a href="logout.php" class="text-white hover:text-red-500">Logout</a>
             </div>
         </div>
     </nav>
@@ -104,8 +124,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
-    <footer class="bg-white text-center py-4 shadow-md mt-5">
-        <p class="text-gray-600">&copy; 2023 San Pablo City Mega Capitol. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="bg-blue-800 text-center py-4 shadow-md mt-5">
+        <p class="text-white">&copy; 2025 San Pablo City Mega Capitol. All rights reserved.</p>
     </footer>
+
 </body>
 </html>
