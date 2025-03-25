@@ -47,7 +47,7 @@ $conn->close();
     <title>My Appointments</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
     <!-- Navbar -->
     <nav class="bg-blue-800 shadow-md py-4">
@@ -69,8 +69,8 @@ $conn->close();
         </div>
     </nav>
 
-    <!-- Main Container -->
-    <div class="container mx-auto p-6">
+    <!-- Main Content Wrapper -->
+    <div class="flex-grow container mx-auto p-6">
         <h1 class="text-3xl font-bold text-gray-800 mb-6">My Appointments</h1>
 
         <!-- Table -->
@@ -117,8 +117,8 @@ $conn->close();
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-blue-800 text-center py-4 shadow-md mt-5">
+    <!-- Footer (Sticks to the bottom) -->
+    <footer class="bg-blue-800 text-center py-4 shadow-md w-full">
         <p class="text-white">&copy; 2025 San Pablo City Mega Capitol. All rights reserved.</p>
     </footer>
 

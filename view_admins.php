@@ -85,7 +85,7 @@ $result = $conn->query($query);
                                 alt="Profile Picture" class="w-24 h-24 rounded-full mb-4">
                             <h3 class="text-lg font-semibold"><?php echo $admin['first_name'] . " " . $admin['last_name']; ?></h3>
                             <p class="text-gray-600 text-sm"><?php echo $admin['email_address']; ?></p>
-                            <span class="mt-2 text-blue-700 font-medium"><?php echo $admin['department_name']; ?></span>
+                            <span class="mt-2 text-blue-700 font-medium text-center"><?php echo $admin['department_name']; ?></span>
                         </div>
                     <?php endwhile; ?>
                 </div>

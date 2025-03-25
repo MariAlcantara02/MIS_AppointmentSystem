@@ -32,24 +32,27 @@
         </div>
     </nav>
 
-    <!-- Gallery Section -->
-    <div class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-        <h1 class="text-2xl font-bold text-gray-800">Gallery</h1>
-        <p class="text-gray-600 mt-2">Explore our collection of images showcasing events, landmarks, and community activities.</p>
+    <!-- Main Content Wrapper (flex-grow ensures footer stays at bottom) -->
+    <div class="flex-grow">
+        <!-- Gallery Section -->
+        <div class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+            <h1 class="text-2xl font-bold text-gray-800">Gallery</h1>
+            <p class="text-gray-600 mt-2">Explore our collection of images showcasing events, landmarks, and community activities.</p>
 
-        <!-- Image Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
-            <img src="image1.jpg" alt="Gallery Image 1" class="w-full h-48 object-cover rounded-lg shadow-md">
-            <img src="image2.jpg" alt="Gallery Image 2" class="w-full h-48 object-cover rounded-lg shadow-md">
-            <img src="image3.jpg" alt="Gallery Image 3" class="w-full h-48 object-cover rounded-lg shadow-md">
-            <img src="image4.jpg" alt="Gallery Image 4" class="w-full h-48 object-cover rounded-lg shadow-md">
-            <img src="image5.jpg" alt="Gallery Image 5" class="w-full h-48 object-cover rounded-lg shadow-md">
-            <img src="image6.jpg" alt="Gallery Image 6" class="w-full h-48 object-cover rounded-lg shadow-md">
+            <!-- Image Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
+                <img src="image1.jpg" alt="Gallery Image 1" class="w-full h-48 object-cover rounded-lg shadow-md">
+                <img src="image2.jpg" alt="Gallery Image 2" class="w-full h-48 object-cover rounded-lg shadow-md">
+                <img src="image3.jpg" alt="Gallery Image 3" class="w-full h-48 object-cover rounded-lg shadow-md">
+                <img src="image4.jpg" alt="Gallery Image 4" class="w-full h-48 object-cover rounded-lg shadow-md">
+                <img src="image5.jpg" alt="Gallery Image 5" class="w-full h-48 object-cover rounded-lg shadow-md">
+                <img src="image6.jpg" alt="Gallery Image 6" class="w-full h-48 object-cover rounded-lg shadow-md">
+            </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-blue-800 text-center py-4 shadow-md mt-5">
+    <!-- Footer (Stays at the Bottom) -->
+    <footer class="bg-blue-800 text-center py-4 shadow-md w-full">
         <p class="text-white">&copy; 2025 San Pablo City Mega Capitol. All rights reserved.</p>
     </footer>
 
