@@ -104,10 +104,10 @@ while ($row = $trend_result->fetch_assoc()) {
         }
     </style>
 </head>
-<body class="bg-gray-100 flex">
+<body class="bg-gray-100 min-h-screen flex h-screen">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-blue-800 text-white h-screen fixed p-6">
+    <aside id="sidebar" class="w-64 bg-blue-800 text-white h-screen p-6 transition-all duration-300">
     <div class="flex items-center space-x-3 text-2xl font-bold mb-6">
             <button id="toggle-sidebar">
                 <i class="fa-solid fa-bars"></i>
@@ -128,16 +128,22 @@ while ($row = $trend_result->fetch_assoc()) {
                 </a>
             </li>
             <li class="hover:bg-gray-700 p-2 rounded-md">
+                <a href="create_announcement_admin.php" class="flex items-center space-x-3">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span class="menu-text">Announcements</span>
+                </a>
+            </li>
+            <li class="hover:bg-gray-700 p-2 rounded-md">
                 <a href="admin_profile.php" class="flex items-center space-x-3">
                     <i class="fas fa-user-shield"></i>
-                    <span class="menu-text">Admin Profile</span>
+                    <span class="menu-text">Profile</span>
                 </a>
             </li>
         </ul>
     </aside>
 
     <!-- Main Content -->
-    <div class="flex flex-col flex-1 min-h-screen ml-64">
+    <div id="main-content" class="flex flex-col flex-1 min-h-screen overflow-x-auto">
 
         <!-- Navbar -->
         <nav class="bg-blue-800 py-4 px-6 flex justify-between items-center shadow-md">
@@ -149,7 +155,7 @@ while ($row = $trend_result->fetch_assoc()) {
         </nav>
 
         <!-- Main Content -->
-        <div class="flex-grow p-6">
+        <div class="container mx-auto p-6 flex-grow overflow-y-auto">
             <h1 class="text-3xl font-bold text-gray-800 mb-6">Admin Dashboard - <?php echo htmlspecialchars($admin_department_name); ?></h1>
 
             <!-- Analytics Cards -->
@@ -251,6 +257,22 @@ while ($row = $trend_result->fetch_assoc()) {
             maintainAspectRatio: false,
             width: 300,
             height: 200
+        }
+    });
+</script>
+<!-- Sidebar Toggle Script -->
+<script>
+    document.getElementById("toggle-sidebar").addEventListener("click", function() {
+        const sidebar = document.getElementById("sidebar");
+        const menuLabels = document.querySelectorAll(".menu-text");
+
+        sidebar.classList.toggle("w-20");
+        sidebar.classList.toggle("w-64");
+
+        if (sidebar.classList.contains("w-20")) {
+            menuLabels.forEach(label => label.classList.add("hidden"));
+        } else {
+            menuLabels.forEach(label => label.classList.remove("hidden"));
         }
     });
 </script>

@@ -20,7 +20,7 @@
                 <i class="fas fa-bars text-xl"></i>
             </button>
             <div class="hidden md:flex space-x-6" id="menu">
-                <a href="public_announcement.php" class="text-white hover:text-blue-500">Announcement</a>
+            <a href="public_announcement.php" class="text-white hover:text-blue-500">Announcement</a>
                 <a href="public_about.php" class="text-white font-bold">About</a>
                 <a href="public_gallery.php" class="text-white hover:text-blue-500">Gallery</a>
                 <a href="index.php" class="text-white hover:text-blue-500">Sign In</a>
@@ -28,27 +28,29 @@
         </div>
     </nav>
 
-    <!-- About Section -->
-    <div class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-        <h1 class="text-2xl font-bold text-gray-800">About</h1>
-        <p class="text-gray-600 mt-2">
-            Welcome to the San Pablo City Mega Capitol website. Our mission is to serve the community with efficiency and transparency.
-        </p>
+    <!-- Main Content Wrapper -->
+    <div class="flex-grow">
+        <div class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+            <h1 class="text-2xl font-bold text-gray-800">About</h1>
+            <p class="text-gray-600 mt-2">
+                Welcome to the San Pablo City Mega Capitol website. Our mission is to serve the community with efficiency and transparency.
+            </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <div>
-                <h2 class="text-xl font-semibold text-gray-700">Our Vision</h2>
-                <p class="text-gray-600 mt-2">To be a leading government institution that fosters growth, sustainability, and community engagement.</p>
-            </div>
-            <div>
-                <h2 class="text-xl font-semibold text-gray-700">Our Mission</h2>
-                <p class="text-gray-600 mt-2">Providing accessible, transparent, and efficient services to the citizens of San Pablo City.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-700">Our Vision</h2>
+                    <p class="text-gray-600 mt-2">To be a leading government institution that fosters growth, sustainability, and community engagement.</p>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-700">Our Mission</h2>
+                    <p class="text-gray-600 mt-2">Providing accessible, transparent, and efficient services to the citizens of San Pablo City.</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-blue-800 text-center py-4 shadow-md mt-5">
+    <!-- Footer (Stays at the Bottom) -->
+    <footer class="bg-blue-800 text-center py-4 shadow-md w-full">
         <p class="text-white">&copy; 2025 San Pablo City Mega Capitol. All rights reserved.</p>
     </footer>
 

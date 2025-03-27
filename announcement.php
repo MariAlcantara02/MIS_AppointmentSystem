@@ -1,3 +1,17 @@
+<?php
+include 'connect.php';
+
+// Fetch all announcements from the database
+$announcement_query = $conn->prepare("
+    SELECT a.title, a.content, a.created_at, a.banner_photo, d.department_name 
+    FROM announcements a
+    LEFT JOIN departments d ON a.department_id = d.id
+    ORDER BY a.created_at DESC
+");
+$announcement_query->execute();
+$announcements = $announcement_query->get_result();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,22 +51,31 @@
             <h1 class="text-2xl font-bold text-gray-800">Announcements</h1>
             <p class="text-gray-600 mt-2">Stay updated with the latest announcements and events.</p>
 
-            <!-- Example Announcement -->
-            <div class="mt-6 space-y-4">
-                <div class="p-4 bg-gray-50 border-l-4 border-blue-500 rounded-lg">
-                    <h2 class="text-lg font-semibold text-gray-700">Upcoming Event</h2>
-                    <p class="text-gray-600 text-sm">Join us for the Mega Capitol Annual Summit on April 15, 2025.</p>
-                </div>
+            <!-- Dynamic Announcements -->
+            <div class="mt-6 space-y-6">
+                <?php if ($announcements->num_rows > 0): ?>
+                    <?php while ($row = $announcements->fetch_assoc()): ?>
+                        <div class="bg-gray-50 border-l-4 border-blue-500 rounded-lg shadow-md">
+                            <!-- Display Banner Image If Exists -->
+                            <?php if (!empty($row['banner_photo'])): ?>
+                                <img src="<?php echo htmlspecialchars($row['banner_photo']); ?>" alt="Banner Image" class="w-full h-64 object-cover rounded-t-lg">
+                            <?php endif; ?>
 
-                <div class="p-4 bg-gray-50 border-l-4 border-green-500 rounded-lg">
-                    <h2 class="text-lg font-semibold text-gray-700">New Services Available</h2>
-                    <p class="text-gray-600 text-sm">We have introduced online appointment booking for faster service.</p>
-                </div>
+                            <div class="p-4">
+                                <h2 class="text-lg font-semibold text-gray-700"><?php echo htmlspecialchars($row['title']); ?></h2>
+                                <p class="text-gray-600 text-sm"><?php echo htmlspecialchars($row['content']); ?></p>
+                                <p class="text-gray-500 text-xs mt-2">Posted by <?php echo htmlspecialchars($row['department_name']); ?> - <?php echo date("F j, Y, g:i a", strtotime($row['created_at'])); ?></p>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <p class="text-gray-600">No announcements available.</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
-    <!-- Footer (Stays at the Bottom) -->
+    <!-- Footer -->
     <footer class="bg-blue-800 text-center py-4 shadow-md w-full">
         <p class="text-white">&copy; 2025 San Pablo City Mega Capitol. All rights reserved.</p>
     </footer>

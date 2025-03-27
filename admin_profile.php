@@ -18,47 +18,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 $admin = $result->fetch_assoc();
 
-// Handle profile update
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $first_name = htmlspecialchars($_POST['first_name']);
-    $last_name = htmlspecialchars($_POST['last_name']);
-    $email = filter_var($_POST['email_address'], FILTER_VALIDATE_EMAIL);
-
-    // Handle profile picture upload
-    if (!empty($_FILES["profile_picture"]["name"])) {
-        $target_dir = "uploads/";
-        $file_name = basename($_FILES["profile_picture"]["name"]);
-        $target_file = $target_dir . $file_name;
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        $allowed_types = ["jpg", "jpeg", "png"];
-
-        if (in_array($imageFileType, $allowed_types)) {
-            if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $target_file)) {
-                $profile_picture = $file_name;
-            } else {
-                $error = "Error uploading file.";
-            }
-        } else {
-            $error = "Only JPG, JPEG, and PNG files are allowed.";
-        }
-    } else {
-        $profile_picture = $admin['profile_picture']; // Keep the old picture
-    }
-
-    // If no errors, update the database
-    if (!isset($error)) {
-        $update_query = "UPDATE admins SET first_name = ?, last_name = ?, email_address = ?, profile_picture = ? WHERE id = ?";
-        $stmt = $conn->prepare($update_query);
-        $stmt->bind_param("ssssi", $first_name, $last_name, $email, $profile_picture, $admin_id);
-
-        if ($stmt->execute()) {
-            $success = "Profile updated successfully!";
-            header("Refresh:2; url=admin_profile.php"); // Auto-refresh
-        } else {
-            $error = "Something went wrong!";
-        }
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -71,10 +30,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
 </head>
 
-<body class="bg-gray-100 flex min-h-screen">
+<body class="bg-gray-100 min-h-screen flex h-screen">
     <!-- Sidebar -->
-    <aside id="sidebar" class="w-64 bg-blue-800 text-white h-screen p-6 fixed left-0 top-0">
-        <div class="flex items-center space-x-3 text-2xl font-bold mb-6">
+    <aside id="sidebar" class="w-64 bg-blue-800 text-white h-screen p-6 transition-all duration-300">
+    <div class="flex items-center space-x-3 text-2xl font-bold mb-6">
             <button id="toggle-sidebar">
                 <i class="fa-solid fa-bars"></i>
             </button>
@@ -94,32 +53,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
             <li class="hover:bg-gray-700 p-2 rounded-md">
+                <a href="create_announcement_admin.php" class="flex items-center space-x-3">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span class="menu-text">Announcements</span>
+                </a>
+            </li>
+            <li class="hover:bg-gray-700 p-2 rounded-md">
                 <a href="admin_profile.php" class="flex items-center space-x-3">
                     <i class="fas fa-user-shield"></i>
-                    <span class="menu-text">Admin Profile</span>
+                    <span class="menu-text">Profile</span>
                 </a>
             </li>
         </ul>
     </aside>
 
-    <!-- Main Content Area -->
-    <div class="flex flex-col flex-1 ml-64">
+    <!-- Main Content -->
+    <div id="main-content" class="flex flex-col flex-1 min-h-screen overflow-x-auto">
         <!-- Navbar -->
-        <nav class="bg-blue-800 shadow-md py-4 px-6 flex justify-between items-center">
+        <nav class="bg-blue-800 shadow-md py-4 px-6 flex justify-between items-center shadow-md">
             <div class="flex items-center space-x-3">
                 <img src="sanpablocityseal.png" alt="San Pablo City Seal" class="w-10 h-10">
                 <span class="text-lg font-semibold text-white">San Pablo City Mega Capitol</span>
             </div>
-            <button id="menu-toggle" class="md:hidden focus:outline-none">
-                <i class="fas fa-bars text-xl text-white"></i>
-            </button>
-            <div class="hidden md:flex space-x-4">
-                <a href="logout.php" class="text-white hover:text-red-500">Logout</a>
-            </div>
+            <a href="logout.php" class="text-white hover:text-red-500">Logout</a>
         </nav>
 
-        <!-- Profile Content (Centered) -->
-        <div class="container mx-auto p-6 flex-grow">
+<!-- Profile Content (Centered) -->
+<div class="container mx-auto p-6 flex-grow overflow-y-auto">
         <div class="flex-1 flex items-center justify-center">
             <div class="bg-white p-6 rounded-lg shadow-lg w-96">
                 <h2 class="text-xl font-bold mb-4 text-center">Admin Profile</h2>
@@ -179,24 +139,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </footer>
     </div>
 
-    <script>
-        // Toggle sidebar
-        document.getElementById("toggle-sidebar").addEventListener("click", function() {
-            const sidebar = document.getElementById("sidebar");
-            const menuLabels = document.querySelectorAll(".menu-text");
+<!-- Sidebar Toggle Script -->
+<script>
+    document.getElementById("toggle-sidebar").addEventListener("click", function() {
+        const sidebar = document.getElementById("sidebar");
+        const menuLabels = document.querySelectorAll(".menu-text");
 
-            // Toggle sidebar width
-            sidebar.classList.toggle("w-20");
-            sidebar.classList.toggle("w-64");
+        sidebar.classList.toggle("w-20");
+        sidebar.classList.toggle("w-64");
 
-            // Hide menu text when collapsed
-            if (sidebar.classList.contains("w-20")) {
-                menuLabels.forEach(label => label.classList.add("hidden"));
-            } else {
-                menuLabels.forEach(label => label.classList.remove("hidden"));
-            }
-        });
-    </script>
+        if (sidebar.classList.contains("w-20")) {
+            menuLabels.forEach(label => label.classList.add("hidden"));
+        } else {
+            menuLabels.forEach(label => label.classList.remove("hidden"));
+        }
+    });
+</script>
 </body>
 </html>
-

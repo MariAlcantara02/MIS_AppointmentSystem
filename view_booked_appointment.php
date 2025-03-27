@@ -115,8 +115,7 @@ $conn->close();
 
     <!-- Main Content Area -->
     <div class="flex-1 p-6">
-        <h1 class="text-2xl font-bold text-gray-800">Welcome to the Super Admin Dashboard</h1>
-        <p class="text-gray-600 mt-2">Manage your appointments, users, and more.</p>
+        <h1 class="text-2xl font-bold text-gray-800">Booked Appointments</h1>
 
         <!-- Bookings Section -->
         <h2 class="text-xl font-bold text-gray-800 mt-6">Bookings</h2>
