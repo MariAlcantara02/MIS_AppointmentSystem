@@ -34,7 +34,7 @@ $announcements = $announcement_query->get_result();
             </button>
             <div class="hidden md:flex space-x-6" id="menu">
                 <a href="homepage.php" class="text-white hover:text-blue-500">Home</a>
-                <a href="announcement.php" class="text-white hover:text-blue-500">Announcement</a>
+                <a href="announcement.php" class="text-white font-bold">Announcement</a>
                 <a href="about.php" class="text-white hover:text-blue-500">About</a>
                 <a href="gallery.php" class="text-white hover:text-blue-500">Gallery</a>
                 <a href="appointment_booking.php" class="text-white hover:text-blue-500">Book Appointment</a>
